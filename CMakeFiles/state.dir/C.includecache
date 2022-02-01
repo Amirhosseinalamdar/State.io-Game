@@ -17,4 +17,6 @@ SDL2/SDL2_gfxPrimitives.h
 -
 time.h
 -
+math.h
+-
 

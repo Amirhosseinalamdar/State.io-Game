@@ -3,20 +3,21 @@
 #include<SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include <time.h>
+#include <math.h>
 #define radius 5
-#define region_size 25
+#define radius2 5
+#define bases 20
 #define screenW 1200 //120
 #define screenH 720 //72
 #define map_y 74
 #define map_x 122
-#define chanta_harif 4
+#define chanta_harif 5
 #define color_size 10
-
 //abgr
 //har region max 80 khoone
 
 struct Regions{
-    int id;  // -2 neutral  -1 default   ....players indexes
+    int id;  //  -1 default   ....players indexes
     int map[map_y][map_x];// 0 khali 1 vasta 2 border 3 centre
     int num_of_boxes;
     int center_x,center_y;
@@ -24,17 +25,12 @@ struct Regions{
 };
 
 struct Players{
-    int Regions[region_size];
+    int Regions[bases];
     Uint32 color;
 };
 
-struct Colors_and_symbols{
-    Uint32 player_colors[color_size];
-    Uint32 default_color;
-    Uint32 neutral_color;
-};
 
-void set_maps(struct Regions region[],int game_map[][map_x])
+void set_maps(struct Regions region[],int game_map[][map_x],int region_size)
 {
     for(int i=0;i<region_size;i++){
         for(int j=0;j<map_y;j++){
@@ -50,16 +46,19 @@ void set_maps(struct Regions region[],int game_map[][map_x])
         }
     }
 }
-void set_regions_map(struct Regions region[],int game_map[][map_x])
+void set_regions_map(struct Regions region[],int game_map[][map_x],int region_size)
 {
     int tmpX,tmpY;
     srand(time(0));
     for(int i=0;i<region_size;i++){
         region[i].num_of_boxes=rand()%200+200;
         while(1) {
-            tmpX = rand() % 101 +10;
-            tmpY = rand() % 53 +10;
+            tmpX = rand() % 106 +7;
+            tmpY = rand() % 63 +5;
             if(game_map[tmpY+radius][tmpX]!=0 || game_map[tmpY-radius][tmpX]!=0 || game_map[tmpY][tmpX+radius]!=0 || game_map[tmpY][tmpX-radius]!=0){
+                continue;
+            }
+            if(game_map[tmpY+radius2][tmpX+radius2]!=0 || game_map[tmpY+radius2][tmpX-radius2]!=0 || game_map[tmpY-radius2][tmpX+radius2]!=0 || game_map[tmpY-radius2][tmpX-radius2]!=0){
                 continue;
             }
             if(game_map[tmpY][tmpX]!=0){
@@ -67,33 +66,38 @@ void set_regions_map(struct Regions region[],int game_map[][map_x])
             }
             game_map[tmpY][tmpX]=i+10;
             region[i].map[tmpY][tmpX]=1;
+            region[i].center_x=tmpX;
+            region[i].center_y=tmpY;
             break;
         }
         int counter=0;
         int flag=1;
-        int limit1=rand() % 6 + 6 ;
+        int limit1=rand() % 6 + 5 ;
         for(int j=-limit1/(rand()%3 +1);j<limit1+1;j++){
             if(flag==0){
                 break;
             }
-            int limit=rand() %8  +  7 ;
+            int limit=rand() %8  +  6 ;
             if(limit1==7){limit1++;}
             for(int k=-limit/(rand()%3+1);k<limit+1;k++){
                 if(tmpY+j > map_y-2 || tmpY+j < 1 || tmpX+k > map_x-2 || tmpX+k < 1) {
                     continue;
                 }
-                game_map[tmpY+j][tmpX+k]=i+10;
-                region[i].map[tmpY+j][tmpX+k]=1;
-                counter++;
+                //if(game_map[tmpY+j][tmpX+k]==0) {
+                    game_map[tmpY + j][tmpX + k] = i + 10;
+                    region[i].map[tmpY + j][tmpX + k] = 1;
+                    counter++;
+                //}
                 if(counter==region[i].num_of_boxes) {
                     flag = 0;
                     break;
                 }
             }
         }
+        region[i].num_of_boxes=counter;
     }
 }
-void set_regions_border(struct Regions region[],int game_map[][map_x])
+void set_regions_border(struct Regions region[],int game_map[][map_x],int region_size)
 {
     for(int i=0;i<region_size;i++){
         for(int j=1;j<map_y-1;j++){
@@ -124,25 +128,20 @@ void set_regions_border(struct Regions region[],int game_map[][map_x])
                     if((region[i].map[j][k + 1] == -1 || region[i].map[j][k - 1] == -1 || region[i].map[j + 1][k] == -1 || region[i].map[j - 1][k] == -1)){
                         region[i].map[j][k]=2;
                     }
-
                 }
             }
         }
     }
 }
-void draw_map(struct Regions region[],SDL_Renderer *sdlRenderer)
+void draw_map(struct Regions region[],SDL_Renderer *sdlRenderer,int region_size,Uint32 colors_array[],int players)
 {
-    Uint32 colors_array[10]={0x88000000,0x88ffffff,0x880000ff,0x8800ff00,0x88ff0000,0x88ffff00,0x8800ffff,0x88ff00ff,0x88CCD88D,0x883C3A40};//#403a3c
     srand(time(0));
     for(int i=0;i<region_size;i++){
-        Uint32 border_color=0xee5635B0;
-        Uint32 color = colors_array[0];
-        if(i>region_size-6) {
-            color = colors_array[rand() % 9];
+        Uint32 chosen_color=colors_array[rand()%10];
+        if(i<region_size-players){
+            chosen_color=colors_array[10];
         }
-        else{
-            color= colors_array[9];
-        }
+        region[i].color=chosen_color;
         for(int j=1;j<map_y;j++){
             for(int k=1;k<map_x;k++){
                 if(region[i].map[j][k]!=0) {
@@ -151,31 +150,53 @@ void draw_map(struct Regions region[],SDL_Renderer *sdlRenderer)
                     Sint16 y1 = (j-1) * 10;
                     Sint16 y2 = y1 + 10;
                     if(region[i].map[j][k]==1) {
-                        boxColor(sdlRenderer, x1, y1, x2, y2, color);
+                        boxColor(sdlRenderer, x1, y1, x2, y2,chosen_color);
+                    }
+                    else if(region[i].map[j][k]==2){
+                        boxColor(sdlRenderer,x1,y1,x2,y2,colors_array[11]);
                     }
                     else{
-                        boxColor(sdlRenderer,x1,y1,x2,y2,border_color);
+                        boxColor(sdlRenderer,x1,y1,x2,y2,colors_array[11]);
                     }
                 }
             }
         }
     }
 }
-void organize_regions(struct Regions region[],int game_map[][map_x])
+void organize_regions(struct Regions region[],int game_map[][map_x],int region_size)
 {
     for(int i=0;i<region_size;i++){
-        for(int j=0;j<map_y-1;j++){
-            for(int k=0;k<map_x-1;k++){
+        region[i].num_of_boxes=0;
+        for(int j=1;j<map_y-1;j++){
+            for(int k=1;k<map_x-1;k++){
+                if(region[i].map[j][k]!=0){
+                    region[i].num_of_boxes++;
+                }
                 if(region[i].map[j][k]!=0  &&  game_map[j][k] != i+10){
                     region[i].map[j][k]=0;
+                    region[i].num_of_boxes--;
                 }
             }
         }
     }
 }
-void update_game_map(struct Regions region[],int game_map[][map_x]){
+void set_num_of_boxes(struct Regions region[],int game_map[][map_x],int region_size)
+{
     for(int i=0;i<region_size;i++){
-        for(int j=0;j<map_y-1;j++){
+        region[i].num_of_boxes=0;
+        for(int j=1;j<map_y-1;j++){
+            for(int k=1;k<map_x-1;k++){
+                if(region[i].map[j][k]!=0){
+                    region[i].num_of_boxes++;
+                    game_map[j][k]=i+10;
+                }
+            }
+        }
+    }
+}
+void update_game_map(struct Regions region[],int game_map[][map_x],int region_size){
+    for(int i=1;i<region_size;i++){
+        for(int j=1;j<map_y-1;j++){
             for(int k=0;k<map_x-1;k++){
                 if(region[i].map[j][k]!=0 && region[i].map[j+1][k]==0 && region[i].map[j-1][k]==0){
                     region[i].map[j][k]=0;
@@ -188,24 +209,28 @@ void update_game_map(struct Regions region[],int game_map[][map_x]){
         }
     }
 }
-void set_region_colors(struct Regions region[],struct Colors_and_symbols color_struct,int players,int neutral_players,struct Players player[])
+void get_centre(struct Regions region[],int region_size)
 {
-    srand(time(0));
-    int random_number=rand()%
-    for(int i=0;i<region_size;i++){
-        if(i<region_size-players-neutral_players) {
-            region[i].color = color_struct.default_color;
+    int sum_x=0,sum_y=0;
+    int sum=0;
+    for(int i=0;i<region_size;i++) {
+        for (int j = 1; j < map_y - 1; j++) {
+            for (int k = 1; k < map_x-1; k++) {
+                if(region[i].map[j][k]!=0){
+                    sum_y+=j;
+                    sum_x+=k;
+                }
+            }
         }
-        else if(i<region_size-players){
-            region[i].color=color_struct.neutral_color;
-        }
-        else{
-            region[i].color=color_struct.player_colors[rand()%10];
-        }
-
+        region[i].center_x = sum_x / (region[i].num_of_boxes);
+        region[i].center_y = sum_y / (region[i].num_of_boxes);
+        region[i].map[region[i].center_y][region[i].center_x] = 3;
+        sum_x=0;
+        sum_y=0;
     }
 }
-void get_centre(struct Regions region[])
+
+
 int main()
 {
     srand(time(0));
@@ -214,10 +239,10 @@ int main()
     const int SCREEN_HEIGHT = screenH;
     int flag=1;
     int players=chanta_harif; //tedade harif
-    int bases=region_size;
-    int neutral_players=rand()%3 +2;
+    int region_size=bases;
     struct Regions region[region_size];
     int game_map[map_y][map_x];
+    Uint32 colors_array[12]={0xffffffff,0xffffff00,0xffff0000,0xff000000,0xffff00ff,0xff00ffff,0xff00ff00,0xff0000ff,0xffabcdef,0xffabbcda,0xff3C3A40,0xff5635B0}; //def  //border
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
@@ -229,22 +254,22 @@ int main()
 
     SDL_Renderer *sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     SDL_bool shallExit = SDL_FALSE;
+
     while (shallExit == SDL_FALSE) {
         SDL_SetRenderDrawColor(sdlRenderer, 0x1E, 0x00, 0x1E, 0xf0);
         SDL_RenderClear(sdlRenderer);
 
-
-        set_maps(region, game_map);
-        set_regions_map(region, game_map);
-        set_regions_border(region, game_map);
-        update_game_map(region,game_map);
-        //organize_regions(region,game_map);
-
-        draw_map(region,sdlRenderer);
-
+        set_maps(region, game_map,region_size);
+        set_regions_map(region, game_map,region_size);
+        set_regions_border(region, game_map,region_size);
+        update_game_map(region,game_map,region_size);
+        set_num_of_boxes(region,game_map,region_size);
+        organize_regions(region,game_map,region_size);
+        get_centre(region,region_size);
+        draw_map(region,sdlRenderer,region_size,colors_array,players);
 
         SDL_RenderPresent(sdlRenderer);
-        SDL_Delay(6000 / FPS);
+        SDL_Delay(30000 / FPS);
         SDL_Event sdlEvent;
         while (SDL_PollEvent(&sdlEvent)) {
             switch (sdlEvent.type) {
