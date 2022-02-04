@@ -1,20 +1,16 @@
-#include<stdio.h>
-#include<stdbool.h>
-#include<SDL2/SDL.h>
-#include <SDL2/SDL2_gfxPrimitives.h>
-#include <time.h>
-#include <SDL2/SDL_ttf.h>
-#include <string.h>
-#include <math.h>
+
+#include "first_menu.h"
+#include "main_menu.h"
+
 #define radius 5
 #define radius2 5
 #define bases 20
 #define screenW 1200 //120
 #define screenH 720 //72
-#define map_y 74
-#define map_x 122
 #define chanta_harif 5
 #define color_size 10
+#define map_y 74
+#define map_x 122
 #define menu 8
 //abgr
 //har region max 80 khoone
@@ -24,12 +20,17 @@ struct Regions{
     int map[map_y][map_x];// 0 khali 1 vasta 2 border 3 centre
     int num_of_boxes;
     int center_x,center_y;
+    int soldiers;
+    char soldiers_string[4];
     Uint32 color;
+    Uint32 barracks_color;
 };
 
 struct Players{
     int Regions[bases];
+    int base_size;
     Uint32 color;
+    int rate;
 };
 
 void set_mapsAndId(struct Regions region[],int game_map[][map_x],int region_size)
@@ -136,13 +137,27 @@ void set_regions_border(struct Regions region[],int game_map[][map_x],int region
         }
     }
 }
-void draw_map(struct Regions region[],SDL_Renderer *sdlRenderer,int region_size,Uint32 colors_array[],int players)
+void draw_map(struct Regions region[],SDL_Renderer *sdlRenderer,int region_size,Uint32 colors_array[],int players,Uint32 barracks_colors_array[])
 {
     srand(time(0));
+    int tmp[region_size];
+    int flag=1;
     for(int i=0;i<region_size;i++){
+        flag=1;
         Uint32 chosen_color = colors_array[10];
+        region[i].barracks_color=barracks_colors_array[10];
+
+
         if (region[i].id>=0) {
-            chosen_color = colors_array[rand() % 10];
+            tmp[i]=rand()%10;
+            for(int l=0;l<i;l++){
+                if(tmp[l]==tmp[i]){
+                    l=-1;
+                    tmp[i]=rand()%10;
+                }
+            }
+            chosen_color = colors_array[tmp[i]];
+            region[i].barracks_color=barracks_colors_array[tmp[i]];
         }
         region[i].color = chosen_color;
         for(int j=1;j<map_y;j++){
@@ -152,14 +167,18 @@ void draw_map(struct Regions region[],SDL_Renderer *sdlRenderer,int region_size,
                     Sint16 x2 = x1 + 10;
                     Sint16 y1 = (j-1) * 10;
                     Sint16 y2 = y1 + 10;
-                    if(region[i].map[j][k]==1) {
+                    if(region[i].map[j+1][k]==3 || region[i].map[j-1][k]==3 || region[i].map[j][k+1]==3 || region[i].map[j][k-1]==3){
+                        boxColor(sdlRenderer,x1,y1,x2,y2,region[i].barracks_color);
+                    }
+                    else if(region[i].map[j][k]==1) {
                         boxColor(sdlRenderer, x1, y1, x2, y2,region[i].color);
                     }
                     else if(region[i].map[j][k]==2){
                         boxColor(sdlRenderer,x1,y1,x2,y2,colors_array[11]);
                     }
                     else{
-                        boxColor(sdlRenderer,x1,y1,x2,y2,colors_array[11]);
+                        SDL_RenderPresent(sdlRenderer);
+                        boxColor(sdlRenderer, x1, y1, x2, y2,region[i].barracks_color);
                     }
                 }
             }
@@ -251,67 +270,59 @@ void give_regions_equivalently(struct Regions region[],int region_size, int game
         index_of_max=0;
     }
 }
-void draw_menu(Uint32 colors_array[],SDL_Renderer *sdlRenderer,int flag,int menu_map[][map_x-1])
+void set_soldiers_and_rate(struct Regions region[],int region_size,struct Players player[],int players)
 {
-    int tmp;
-    Uint32 color2,color1;
-    if(flag==1) {
-        color1 = 0xff3C3A40;
-        color2 = 0xff5635B0;
+    int ctr=0;
+    for(int i=0;i<region_size;i++){
+        if(region[i].id==-1) {
+            region[i].soldiers = 30;
+        }
+        else{
+            player[ctr].Regions[0]=i;
+            region[i].soldiers=rand()%20 + 10;
+            ctr++;
+        }
     }
-    else{
-        color1 = 0xcc3C3A40;
-        color2 = 0xcc5635B0;
+    for(int i=0;i<players;i++){
+        if(i==0){
+            player[i].rate=1;
+        }
+        else{
+            player[i].rate=2;
+        }
     }
-    srand(time(0));
-    for(int i=1;i<map_y-1;i+=menu){
-        for(int j=1;j<map_x-1;j+=menu){
-            Sint16 x1 = (j-1) * 10;
-            Sint16 x2 = x1 + menu*10;
-            Sint16 y1 = (i-1) * 10;
-            Sint16 y2 = y1 + menu*10;
-            if(menu_map[i][j]==0) {
-                tmp=rand()%2;
-                if (tmp == 0) {
-                    boxColor(sdlRenderer, x1, y1, x2, y2, color1);
-                    menu_map[i][j] = 1;
-                } else {
-                    boxColor(sdlRenderer, x1, y1, x2, y2, color2);
-                    menu_map[i][j] = 2;
-                }
-            }
-            else {
-                if(menu_map[i][j]==1){
-                    boxColor(sdlRenderer, x1, y1, x2, y2, color1);
-                }
-                else{
-                    boxColor(sdlRenderer, x1, y1, x2, y2, color2);
-                }
-            }
 
+}
+void soldiers_to_string(struct Regions region[],int region_size)
+{
+    for(int i=0;i<region_size;i++){
+        int tmp=region[i].soldiers;
+        int n=tmp;
+        int ctr=0;
+        int digit;
+        while(tmp!=0){
+            tmp/=10;
+            ctr++;
+        }
+        while(ctr!=0){
+            digit=n%10;
+            n/=10;
+            region[i].soldiers_string[ctr-1]=digit+'0';
+            ctr--;
         }
     }
 }
-
-void include_welcome_enter(TTF_Font *font,SDL_Renderer *sdlRenderer)
+void print_soldiers(struct Regions region[],int region_size,SDL_Renderer *sdlRenderer)
 {
-    SDL_Color main_title_color = {0x1E, 0x00, 0x1E, 0xff};
-
-    SDL_Rect main_title_rect = {300 , 30, 600, 200};
-    SDL_Surface *title_surface = TTF_RenderText_Solid(font, "Welcome!", main_title_color);
-    SDL_Texture *title_texture = SDL_CreateTextureFromSurface(sdlRenderer, title_surface);
-    SDL_RenderCopy(sdlRenderer,title_texture,NULL,&main_title_rect);
-    SDL_FreeSurface(title_surface);
-    SDL_DestroyTexture(title_texture);
-    SDL_Rect enter_user_name_rect={280,250,640,100};
-    SDL_Surface *enter_user_name_surface= TTF_RenderText_Solid(font,"Enter your name:",main_title_color);
-    SDL_Texture *enter_user_name_texture= SDL_CreateTextureFromSurface(sdlRenderer,enter_user_name_surface);
-    SDL_RenderCopy(sdlRenderer,enter_user_name_texture,NULL,&enter_user_name_rect);
-    SDL_FreeSurface(enter_user_name_surface);
-    SDL_DestroyTexture(enter_user_name_texture);
+    for(int i=0;i<region_size;i++){
+        stringRGBA(sdlRenderer,region[i].center_x,region[i].center_y,region[i].soldiers_string,255,255,255,255);
+    }
 }
+
+
 int main()
 {
+
     srand(time(0));
     const int FPS = 60;
     const int SCREEN_WIDTH = screenW;
@@ -321,7 +332,9 @@ int main()
     int region_size=bases;
     struct Regions region[region_size];
     int game_map[map_y][map_x];
-    Uint32 colors_array[12]={0xffffffff,0xffffff00,0xffff0000,0xff000000,0xffff00ff,0xff00ffff,0xff00ff00,0xff0000ff,0xffabcdef,0xffabbcda,0xff3C3A40,0xff5635B0}; //def  //border
+    struct Players player[players];
+    Uint32 colors_array[12]={0xffff3445,0xffffff00,0xffff0000,0xff803400,0xffff00ff,0xff00ffff,0xff00ff00,0xff0000ff,0xffabcdef,0xffabbcda,0xff3C3A40,0xff5635B0}; //def  //border
+    Uint32 barracks_colors_array[12]={0x77ff3445,0x77ffff00,0x77ff0000,0x77803400,0x77ff00ff,0x7700ffff,0x7700ff00,0x770000ff,0x77abcdef,0x77abbcda,0x773C3A40,0x775635B0};
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
@@ -339,235 +352,14 @@ int main()
     TTF_Font * font = TTF_OpenFont("RussoOne-Regular.ttf" , 500);
     TTF_Font *font2= TTF_OpenFont("sample.ttf",500);
 
-
-
-
-//case e mouse state edit shavad
-
-    SDL_Color main_title_color = {0x1E, 0x00, 0x1E, 0xff};
-    //entering_user_name
-    SDL_Rect user_name_background_rect={350,400,500,100};
-    SDL_Color user_name_color={0xB0,0x35,0x56,0xff};
-    SDL_Rect user_name_string_rect={360,425,0,60};
-    SDL_Rect continue_button={890,415,70,70};
-
-    SDL_Surface *button_surface= TTF_RenderText_Solid(font,"OK",main_title_color);
-    SDL_Texture *button_texture= SDL_CreateTextureFromSurface(sdlRenderer,button_surface);
-
-    int menu_map[map_y-1][map_x-1]={0};
-    int menu_option = 0;
-    int close=0;
-    SDL_bool shallExit;
-    //0xff5635B0
-    char user_name[32];
-    for(int i=0;i<32;i++){user_name[i]='\0';}
-    char input='\0';
-
-
-    SDL_Surface *user_name_surface= TTF_RenderText_Solid(font,user_name,user_name_color);
-    SDL_Texture *user_name_texture= SDL_CreateTextureFromSurface(sdlRenderer,user_name_surface);
-    SDL_FreeSurface(user_name_surface);
-    SDL_DestroyTexture(user_name_texture);
-    SDL_SetRenderDrawColor(sdlRenderer, 0xff, 0x00, 0x00, 0x00);
-    SDL_RenderClear(sdlRenderer);
-    draw_menu(colors_array,sdlRenderer,0,menu_map);
-    include_welcome_enter(font,sdlRenderer);
-
-    SDL_SetRenderDrawColor(sdlRenderer,0x1e,0x00,0x1e,255);
-    SDL_RenderFillRect(sdlRenderer,&user_name_background_rect);
-
-    SDL_RenderCopy(sdlRenderer,user_name_texture,NULL,&user_name_string_rect);
-    SDL_FreeSurface(user_name_surface);
-    SDL_DestroyTexture(user_name_texture);
-
-    SDL_SetRenderDrawColor(sdlRenderer,0xB0,0x35,0x56,255);
-    SDL_RenderDrawRect(sdlRenderer,&user_name_background_rect);
-
-    /*SDL_SetRenderDrawColor(sdlRenderer,0xB0,0x35,0x56,255);
-    SDL_RenderFillRect(sdlRenderer,&continue_button);
-    SDL_SetRenderDrawColor(sdlRenderer,0x1e,0x00,0x1e,255);
-    SDL_RenderDrawRect(sdlRenderer,&continue_button);
-    SDL_RenderCopy(sdlRenderer,button_texture,NULL,&continue_button);
-    SDL_FreeSurface(button_surface);
-    SDL_DestroyTexture(button_texture);*/
-
-    SDL_RenderPresent(sdlRenderer);
-    SDL_bool done=SDL_FALSE;
-    int mouse_x,mouse_y;
-    while (!done) {
-        SDL_Event event;
-        if (SDL_PollEvent(&event)) {
-            switch (event.type) {
-                case SDL_QUIT:
-                    done = SDL_TRUE;
-                    close=1;
-                    break;
-                case SDL_KEYDOWN:
-
-                    input=event.key.keysym.sym;
-                    if(input==SDLK_RETURN && strlen(user_name)>0){
-                        done=SDL_TRUE;
-                    }
-                    else if(input==SDLK_BACKSPACE && strlen(user_name)>0){
-                        user_name[strlen(user_name)-1]='\0';
-                        user_name_string_rect.w= strlen(user_name)*20;
-                    }
-                    else if(strlen(user_name)==24){
-                    }
-                    else if((input==SDLK_BACKSPACE && strlen(user_name)==0) || input<48 || input>122 || (input<97 && input>90) || (input<65 && input>57)){
-                        if(input=='.' || input==' ') {
-                            user_name[strlen(user_name)] = input;
-                            user_name_string_rect.w = 20 * strlen(user_name);
-                        }
-                    }
-                    else{
-                        user_name[strlen(user_name)]=input;
-                        user_name_string_rect.w=20* strlen(user_name);
-                    }
-
-                    SDL_SetRenderDrawColor(sdlRenderer,0x1e,0x00,0x1e,255);
-                    SDL_RenderFillRect(sdlRenderer,&user_name_background_rect);
-                    SDL_Surface *user_name_surface= TTF_RenderText_Solid(font,user_name,user_name_color);
-                    SDL_Texture *user_name_texture= SDL_CreateTextureFromSurface(sdlRenderer,user_name_surface);
-                    SDL_RenderCopy(sdlRenderer,user_name_texture,NULL,&user_name_string_rect);
-                    SDL_FreeSurface(user_name_surface);
-                    SDL_DestroyTexture(user_name_texture);
-                    SDL_SetRenderDrawColor(sdlRenderer,0xB0,0x35,0x56,255);
-                    SDL_RenderDrawRect(sdlRenderer,&user_name_background_rect);
-
-                    if(strlen(user_name)>0) {
-                        SDL_SetRenderDrawColor(sdlRenderer, 0xB0, 0x35, 0x56, 255);
-                        SDL_RenderFillRect(sdlRenderer, &continue_button);
-                        SDL_SetRenderDrawColor(sdlRenderer, 0x1e, 0x00, 0x1e, 255);
-                        SDL_RenderDrawRect(sdlRenderer, &continue_button);
-                        SDL_Surface *button_surface = TTF_RenderText_Solid(font, "OK", main_title_color);
-                        SDL_Texture *button_texture = SDL_CreateTextureFromSurface(sdlRenderer, button_surface);
-                        SDL_RenderCopy(sdlRenderer, button_texture, NULL, &continue_button);
-                        SDL_FreeSurface(button_surface);
-                        SDL_DestroyTexture(button_texture);
-                    }
-                    else{
-                        SDL_SetRenderDrawColor(sdlRenderer, 0xff, 0x00, 0x00, 0x00);
-                        SDL_RenderClear(sdlRenderer);
-                        draw_menu(colors_array,sdlRenderer,0,menu_map);
-                        include_welcome_enter(font,sdlRenderer);
-
-                        SDL_SetRenderDrawColor(sdlRenderer,0x1e,0x00,0x1e,255);
-                        SDL_RenderFillRect(sdlRenderer,&user_name_background_rect);
-                        SDL_Surface *user_name_surface= TTF_RenderText_Solid(font,user_name,user_name_color);
-                        SDL_Texture *user_name_texture= SDL_CreateTextureFromSurface(sdlRenderer,user_name_surface);
-                        SDL_RenderCopy(sdlRenderer,user_name_texture,NULL,&user_name_string_rect);
-                        SDL_FreeSurface(user_name_surface);
-                        SDL_DestroyTexture(user_name_texture);
-                        SDL_SetRenderDrawColor(sdlRenderer,0xB0,0x35,0x56,255);
-                        SDL_RenderDrawRect(sdlRenderer,&user_name_background_rect);
-                    }
-
-                    SDL_RenderPresent(sdlRenderer);
-                    break;
-
-                /*case SDL_MOUSEMOTION:
-                    SDL_GetGlobalMouseState(&mouse_x,&mouse_y);
-                    if(mouse_x>890 && mouse_x<960 && mouse_y>415 && mouse_y<485){
-                        continue_button.x=880;
-                        continue_button.y=880;
-                        continue_button.w=90;
-                        continue_button.h=90;
-                    }
-                    break;*/
-
-                case SDL_MOUSEBUTTONDOWN:
-                    mouse_y=event.motion.y;
-                    mouse_x=event.motion.x;
-                    if(mouse_x>890 && mouse_x<960 && mouse_y>415 && mouse_y<485 && strlen(user_name)>0){
-                        done=SDL_TRUE;
-                    }
-                    break;
-            }
-        }
-    }
+    int menu_map[map_y - 1][map_x - 1] = {0};
+    int menu_option =first_menu(font,sdlRenderer,colors_array,menu_map);
+    menu_option=main_menu(menu_map,sdlRenderer,font,font2,colors_array);    //menu_option==0 => quit //1 => random map //2 select map //3 rankings
 
 
 
 
-if(close==0) {
-
-    SDL_Color text_color = {0x1E, 0x00, 0x1E, 0xff};
-    SDL_Rect text_rect = {20, 10, 300, 100};
-    SDL_Surface *surface = TTF_RenderText_Solid(font2, "State.io", text_color);
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(sdlRenderer, surface);
-
-    SDL_RenderClear(sdlRenderer);
-    draw_menu(colors_array, sdlRenderer, 1, menu_map);
-    SDL_RenderCopy(sdlRenderer, texture, NULL, &text_rect);
-    SDL_DestroyTexture(texture);
-    SDL_FreeSurface(surface);
-
-
-    text_rect.x = 150, text_rect.y = 180;
-    text_rect.w = 400, text_rect.h = 150;
-    SDL_Surface *surface1 = TTF_RenderText_Solid(font, "New map", text_color);
-    SDL_Texture *texture1 = SDL_CreateTextureFromSurface(sdlRenderer, surface1);
-    SDL_RenderCopy(sdlRenderer, texture1, NULL, &text_rect);
-    SDL_DestroyTexture(texture1);
-    SDL_FreeSurface(surface1);
-
-    text_rect.x = 650, text_rect.y = 180;
-    text_rect.w = 400, text_rect.h = 150;
-    SDL_Surface *surface2 = TTF_RenderText_Solid(font, "Select map", text_color);
-    SDL_Texture *texture2 = SDL_CreateTextureFromSurface(sdlRenderer, surface2);
-    SDL_RenderCopy(sdlRenderer, texture2, NULL, &text_rect);
-    SDL_DestroyTexture(texture2);
-    SDL_FreeSurface(surface2);
-
-    text_rect.x = 450, text_rect.y = 500;
-    text_rect.w = 300, text_rect.h = 100;
-    SDL_Surface *surface3 = TTF_RenderText_Solid(font, "Rankings", text_color);
-    SDL_Texture *texture3 = SDL_CreateTextureFromSurface(sdlRenderer, surface3);
-    SDL_RenderCopy(sdlRenderer, texture3, NULL, &text_rect);
-    SDL_DestroyTexture(texture3);
-    SDL_FreeSurface(surface3);
-
-    SDL_RenderPresent(sdlRenderer);
-
-    SDL_bool shallExit = SDL_FALSE;
-    int x, y;
-    while (shallExit == SDL_FALSE) {
-
-        SDL_Delay(30000 / FPS);
-        SDL_Event sdlEvent;
-        while (SDL_PollEvent(&sdlEvent)) {
-            switch (sdlEvent.type) {
-                case SDL_QUIT:
-                    shallExit = SDL_TRUE;
-                    break;
-                case SDL_MOUSEMOTION:
-                    x = sdlEvent.motion.x;
-                    y = sdlEvent.motion.y;
-                    if (x > 150 && x < 550 && y > 180 && y < 330) {
-
-                    }
-                    break;
-                case SDL_MOUSEBUTTONDOWN:
-                    x = sdlEvent.motion.x;
-                    y = sdlEvent.motion.y;
-                    if (x > 150 && x < 550 && y > 180 && y < 330) {
-                        shallExit = SDL_TRUE;
-                        menu_option = 1;
-                    } else if (x > 650 && x < 1050 && y > 180 && y < 330) {
-                        shallExit = SDL_TRUE;
-                        menu_option = 2;
-                    } else if (x > 450 && x < 750 && y > 500 && y < 600) {
-                        shallExit = SDL_TRUE;
-                        menu_option = 3;
-                    }
-                    break;
-            }
-
-        }
-    }
-}
-    if(menu_option==1) {
+    if(menu_option == 1) {
 
         SDL_SetRenderDrawColor(sdlRenderer, 0x1E, 0x00, 0x1E, 0xf0);//0xf01e001e
         SDL_RenderClear(sdlRenderer);
@@ -579,12 +371,15 @@ if(close==0) {
         organize_regions(region, game_map, region_size);
         get_centre(region, region_size);
         give_regions_equivalently(region, region_size, game_map, players);
-        draw_map(region, sdlRenderer, region_size, colors_array, players);
+        draw_map(region, sdlRenderer, region_size, colors_array, players,barracks_colors_array);
+        //stringRGBA(sdlRenderer,300,200,"34",255,255,255,255);
         SDL_RenderPresent(sdlRenderer);
+        set_soldiers_and_rate(region,region_size,player,players);
+        print_soldiers(region,region_size,sdlRenderer);
 
-        shallExit = SDL_FALSE;
+        SDL_bool shallExit = SDL_FALSE;
         while (shallExit == SDL_FALSE) {
-            SDL_Delay(300 / FPS);
+            SDL_Delay(1000 / FPS);
             SDL_Event sdlEvent;
             while (SDL_PollEvent(&sdlEvent)) {
                 switch (sdlEvent.type) {
@@ -595,8 +390,6 @@ if(close==0) {
             }
         }
     }
-
-
 
 SDL_Quit();
 }

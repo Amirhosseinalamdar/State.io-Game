@@ -7,17 +7,23 @@
 #IncludeRegexTransform: 
 
 /home/amirhossein/Desktop/state.io/src/main.c
+main_menu.h
+/home/amirhossein/Desktop/state.io/src/main_menu.h
+
+/home/amirhossein/Desktop/state.io/src/main_menu.h
 stdio.h
--
-stdbool.h
 -
 SDL2/SDL.h
 -
 SDL2/SDL2_gfxPrimitives.h
 -
-time.h
--
 SDL2/SDL_ttf.h
+-
+stdio.h
+-
+stdbool.h
+-
+time.h
 -
 string.h
 -
