@@ -7,6 +7,7 @@ set(CMAKE_DEPENDS_CHECK_C
   "/home/amirhossein/Desktop/state.io/src/first_menu.c" "/home/amirhossein/Desktop/state.io/CMakeFiles/state.dir/src/first_menu.c.o"
   "/home/amirhossein/Desktop/state.io/src/main.c" "/home/amirhossein/Desktop/state.io/CMakeFiles/state.dir/src/main.c.o"
   "/home/amirhossein/Desktop/state.io/src/main_menu.c" "/home/amirhossein/Desktop/state.io/CMakeFiles/state.dir/src/main_menu.c.o"
+  "/home/amirhossein/Desktop/state.io/src/map.c" "/home/amirhossein/Desktop/state.io/CMakeFiles/state.dir/src/map.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 

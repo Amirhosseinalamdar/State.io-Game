@@ -1,1 +1,1 @@
-/usr/bin/cc   -rdynamic CMakeFiles/state.dir/src/first_menu.c.o CMakeFiles/state.dir/src/main.c.o CMakeFiles/state.dir/src/main_menu.c.o  -o state  -lm -lSDL2 -lSDL2_gfx -lSDL2_ttf -lSDL2_image 
+/usr/bin/cc   -rdynamic CMakeFiles/state.dir/src/first_menu.c.o CMakeFiles/state.dir/src/main.c.o CMakeFiles/state.dir/src/main_menu.c.o CMakeFiles/state.dir/src/map.c.o  -o state  -lm -lSDL2 -lSDL2_gfx -lSDL2_ttf -lSDL2_image 

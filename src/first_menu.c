@@ -107,13 +107,12 @@ int first_menu(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],in
     while (!done) {
         SDL_Event event;
         if (SDL_PollEvent(&event)) {
-            switch (event.type) {
-                case SDL_QUIT:
+            //switch (event.type) {
+                if(event.type==SDL_QUIT) {
                     done = SDL_TRUE;
-                    menu_option=0;
-                    break;
-                case SDL_KEYDOWN:
-
+                    menu_option = 0;
+                }
+                else if(event.type==SDL_KEYDOWN) {
                     input = event.key.keysym.sym;
                     if (input == SDLK_RETURN && strlen(user_name) > 0) {
                         done = SDL_TRUE;
@@ -170,9 +169,9 @@ int first_menu(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],in
                     }
 
                     SDL_RenderPresent(sdlRenderer);
-                    break;
+                }
 
-                case SDL_MOUSEMOTION:
+                else if(event.type==SDL_MOUSEMOTION) {
                     mouse_y = event.motion.y;
                     mouse_x = event.motion.x;
                     if (mouse_x > 890 && mouse_x < 960 && mouse_y > 415 && mouse_y < 485 && strlen(user_name) > 0) {
@@ -227,17 +226,15 @@ int first_menu(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],in
                         SDL_RenderPresent(sdlRenderer);
                         flag3 = 0;
                     }
+                }
 
-                    break;
-
-                case SDL_MOUSEBUTTONDOWN:
+                else if (event.button.button==SDL_BUTTON_LEFT && event.type==SDL_MOUSEBUTTONDOWN) {
                     mouse_y = event.motion.y;
                     mouse_x = event.motion.x;
                     if (mouse_x > 890 && mouse_x < 960 && mouse_y > 415 && mouse_y < 485 && strlen(user_name) > 0) {
                         done = SDL_TRUE;
                     }
-                    break;
-            }
+                }
         }
     }
     return menu_option;

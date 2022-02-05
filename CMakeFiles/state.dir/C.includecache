@@ -6,11 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/home/amirhossein/Desktop/state.io/src/main.c
-main_menu.h
-/home/amirhossein/Desktop/state.io/src/main_menu.h
+/home/amirhossein/Desktop/state.io/src/map.c
+map.h
+/home/amirhossein/Desktop/state.io/src/map.h
 
-/home/amirhossein/Desktop/state.io/src/main_menu.h
+/home/amirhossein/Desktop/state.io/src/map.h
 stdio.h
 -
 SDL2/SDL.h

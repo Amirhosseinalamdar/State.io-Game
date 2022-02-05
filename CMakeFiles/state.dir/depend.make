@@ -4,10 +4,15 @@
 CMakeFiles/state.dir/src/first_menu.c.o: src/first_menu.c
 CMakeFiles/state.dir/src/first_menu.c.o: src/first_menu.h
 
+CMakeFiles/state.dir/src/main.c.o: src/first_menu.h
 CMakeFiles/state.dir/src/main.c.o: src/main.c
 CMakeFiles/state.dir/src/main.c.o: src/main_menu.h
+CMakeFiles/state.dir/src/main.c.o: src/map.h
 
 CMakeFiles/state.dir/src/main_menu.c.o: src/first_menu.h
 CMakeFiles/state.dir/src/main_menu.c.o: src/main_menu.c
 CMakeFiles/state.dir/src/main_menu.c.o: src/main_menu.h
+
+CMakeFiles/state.dir/src/map.c.o: src/map.c
+CMakeFiles/state.dir/src/map.c.o: src/map.h
 
