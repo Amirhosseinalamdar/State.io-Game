@@ -11,6 +11,7 @@
 #include <time.h>
 #include <string.h>
 #include <math.h>
+#include <SDL2/SDL_image.h>
 
 #define radius 6
 #define radius2 5
@@ -59,7 +60,7 @@ struct Troops{
 void set_mapsAndId(struct Regions region[],int game_map[][map_x],int region_size);
 void set_regions_map(struct Regions region[],int game_map[][map_x],int region_size);
 void set_regions_border(struct Regions region[],int game_map[][map_x],int region_size);
-void draw_map(struct Regions region[],SDL_Renderer *sdlRenderer,int region_size,Uint32 colors_array[],int players,Uint32 barracks_colors_array[],int flag,struct Players player[]);
+void draw_map(struct Regions region[],SDL_Renderer *sdlRenderer,int region_size,Uint32 colors_array[],int players,Uint32 barracks_colors_array[],int flag,struct Players player[],int game_map[][map_x]);
 void organize_regions(struct Regions region[],int game_map[][map_x],int region_size);
 void set_num_of_boxes(struct Regions region[],int game_map[][map_x],int region_size);
 void update_game_map(struct Regions region[],int game_map[][map_x],int region_size);
@@ -71,6 +72,7 @@ void print_soldiers(struct Regions region[],int region_size,SDL_Renderer *sdlRen
 void increase_troops(struct Regions region[],int region_size,struct Players player[],int flag);
 int  is_in_center(struct Regions region[],int region_size,int x,int y);
 void initialize_squad(struct Troops squad[],struct Regions region[],int key1,int key2);
+void draw_bases(struct Regions region[],int region_size,int game_map[][map_x],SDL_Renderer *sdlRenderer);
 int is_in_player_center(struct Regions region[],int region_size,int x,int y, struct Players player[]);
 void include_map(struct Regions region[],int game_map[][map_x],int region_size,SDL_Renderer *sdlRenderer,struct Players player[],int players);
 void attack_temp_func(struct Regions region[],int region_size,struct Troops squad[]);
