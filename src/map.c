@@ -295,7 +295,7 @@ void set_soldiers_and_rate(struct Regions region[],int region_size,struct Player
         else{
             player[ctr].Regions[0]=i;
             if(region[i].id==0) {
-                region[i].soldiers =  20;
+                region[i].soldiers =  800;
             } else {
                 region[i].soldiers =  20;
             }
@@ -502,47 +502,43 @@ void increase_troops(struct Regions region[],int region_size,struct Players play
             }
         }
     }
-    void render_bulllets(struct Troops squad[],int bullet_map[][1200],SDL_Renderer *sdlRenderer)
-    {
-    int a=8;
-        for(int i=0;i<720;i++){
-            for(int j=0;j<1200;j++){
-                if(bullet_map[i][j]>=0){
-                    for(int k=-a;k<a+1;k++){
-                        for(int l=-a;l<a+1;l++){
-                            if(k==0 && l==0){
-                                continue;
-                            }
-                            if(bullet_map[i+k][j+l]>=0 && squad[bullet_map[i+k][j+l]%100].player_index!=squad[bullet_map[i][j]%100].player_index){
 
-                                squad[bullet_map[i+k][j+l]%100].x[bullet_map[i+k][j+l]/100]=-1;
-                                squad[bullet_map[i+k][j+l]%100].y[bullet_map[i+k][j+l]/100]=-1;
-                                squad[bullet_map[i][j]%100].x[bullet_map[i][j]/100]=-1;
-                                squad[bullet_map[i][j]%100].y[bullet_map[i][j]/100]=-1;
-                                squad[bullet_map[i][j]%100].sum--;
-                                squad[bullet_map[i+k][j+l]%100].sum--;
-                                bullet_map[i+k][j+l]=-2;
-                                bullet_map[i][j]=-2;
-                            }
-                            else if(bullet_map[i+k][j+l]==-2){
-                                squad[bullet_map[i][j]%100].x[bullet_map[i][j]/100]=-1;
-                                squad[bullet_map[i][j]%100].y[bullet_map[i][j]/100]=-1;
-                                squad[bullet_map[i][j]%100].sum--;
-                                bullet_map[i][j]=-2;
-                            }
+
+
+    void check_soldier_position(struct Troops squad[],int key,int x_pos,int y_pos)
+    {
+        int a=10;
+        int distance=0;
+        for(int i=0;i<64;i++){
+            if(i==key || squad[i].player_index==squad[key].player_index){continue;}
+            if(squad[i].is_empty==0){
+
+                for(int j=0;j<squad[i].counter;j++){
+                    if(squad[i].x[j]>0) {
+                        distance = pow((squad[i].x[j]-squad[key].x[x_pos]), 2)+pow((squad[i].y[j]-squad[key].y[x_pos]), 2);
+                        if(distance<a*a){
+                            squad[i].x[j]*=-1;
+                            squad[i].y[j]*=-1;
+                            squad[key].x[x_pos]*=-1;
+                            squad[key].y[y_pos]*=-1;
                         }
                     }
-                    if(bullet_map[i][j]>=0) {
-                        filledCircleColor(sdlRenderer, j, i, 8, 0xff000000);
-                        filledCircleColor(sdlRenderer, j, i, 6,
-                                          squad[bullet_map[i][j] % 100].color);
+                    else if (squad[i].y[j]<-1){
+                        distance = pow((squad[i].x[j]+squad[key].x[x_pos]), 2)+pow((squad[i].y[j]+squad[key].y[x_pos]), 2);
+                        if(distance<a*a){
+                            squad[key].x[x_pos]*=-1;
+                            squad[key].y[y_pos]*=-1;
+                        }
                     }
                 }
             }
         }
     }
 
-    const int FPS = 45;
+
+
+
+    const int FPS = 60;
 int map(SDL_Renderer *sdlRenderer, int game_map[][map_x], int region_size, int players, Uint32 colors_array[],
             Uint32 barracks_colors_array[], SDL_Window *sdlWindow) {
     struct Troops squad[64];
@@ -576,7 +572,7 @@ int map(SDL_Renderer *sdlRenderer, int game_map[][map_x], int region_size, int p
             attack_temp_func(region, region_size, squad);
             tmp = rand() % 200;
         }
-        if (counter % 40 == 0) {
+        if (counter % 50 == 0) {
             SDL_SetRenderDrawColor(sdlRenderer, 0x1E, 0x00, 0x1E, 0xf0);//0xf01e001e
             SDL_RenderClear(sdlRenderer);
             increase_troops(region, region_size, player, 1);
@@ -597,37 +593,38 @@ int map(SDL_Renderer *sdlRenderer, int game_map[][map_x], int region_size, int p
             if (squad[i].is_empty == 0) {
                 for (int j = 0; j < squad[i].counter; j++) {
                     parcham = 0;
-                    if (squad[i].x[j] != -1) {
-                        if (bullet_map[squad[i].y[j]][squad[i].x[j]] == -1) {
-                            bullet_map[squad[i].y[j]][squad[i].x[j]] = j * 100 + i;
+                    if (squad[i].x[j] > 0) {
+                        check_soldier_position(squad, i, j, j);
+                        if (squad[i].x[j] > 0) {
+                            if (squad[i].counter < squad[i].sum) {
+                                Vo = 10;
+                            } else {
+                                Vo = 10;
+                            }
+                            if (j % 3 == 0) {
+                                squad[i].Vx = Vo * ((region[squad[i].destination_region_index].center_x * 10 - 5 -
+                                                     squad[i].x[j]) /
+                                                    (sqrt(pow((region[squad[i].destination_region_index].center_x * 10 -
+                                                               5 -
+                                                               squad[i].x[j]), 2) +
+                                                          pow((region[squad[i].destination_region_index].center_y * 10 -
+                                                               5 -
+                                                               squad[i].y[j]), 2))));
+                                squad[i].Vy = Vo * ((region[squad[i].destination_region_index].center_y * 10 - 5 -
+                                                     squad[i].y[j]) /
+                                                    (sqrt(pow((region[squad[i].destination_region_index].center_x * 10 -
+                                                               5 -
+                                                               squad[i].x[j]), 2) +
+                                                          pow((region[squad[i].destination_region_index].center_y * 10 -
+                                                               5 -
+                                                               squad[i].y[j]), 2))));
+                            }
+                            squad[i].x[j] += squad[i].Vx;
+                            squad[i].y[j] += squad[i].Vy;
+                            parcham = 1;
                         }
-                        /*filledCircleColor(sdlRenderer, squad[i].x[j], squad[i].y[j], 7, 0xff000000);
-                        filledCircleColor(sdlRenderer, squad[i].x[j], squad[i].y[j], 5,
-                                          squad[i].color);
-                        */
-                        if (squad[i].counter < squad[i].sum) {
-                            Vo = 10;
-                        } else {
-                            Vo = 10;
-                        }
-                        if (j % 3 == 0) {
-                            squad[i].Vx = Vo * ((region[squad[i].destination_region_index].center_x * 10 - 5 -
-                                                 squad[i].x[j]) /
-                                                (sqrt(pow((region[squad[i].destination_region_index].center_x * 10 - 5 -
-                                                           squad[i].x[j]), 2) +
-                                                      pow((region[squad[i].destination_region_index].center_y * 10 - 5 -
-                                                           squad[i].y[j]), 2))));
-                            squad[i].Vy = Vo * ((region[squad[i].destination_region_index].center_y * 10 - 5 -
-                                                 squad[i].y[j]) /
-                                                (sqrt(pow((region[squad[i].destination_region_index].center_x * 10 - 5 -
-                                                           squad[i].x[j]), 2) +
-                                                      pow((region[squad[i].destination_region_index].center_y * 10 - 5 -
-                                                           squad[i].y[j]), 2))));
-                        }
-                        squad[i].x[j] += squad[i].Vx;
-                        squad[i].y[j] += squad[i].Vy;
-                        parcham = 1;
                     }
+
                     if (squad[i].x[j] <= region[squad[i].destination_region_index].center_x * 10 + 40 &&
                             squad[i].x[j] >= region[squad[i].destination_region_index].center_x * 10 - 50 &&
                             squad[i].y[j] <= region[squad[i].destination_region_index].center_y * 10 + 40 &&
@@ -665,9 +662,20 @@ int map(SDL_Renderer *sdlRenderer, int game_map[][map_x], int region_size, int p
             }
         }
 
+        for(int i=0;i<64;i++){
+            if(squad[i].is_empty==0){
+                for(int j=0;j<squad[i].counter;j++){
+                    if(squad[i].x[j]>0){
+                        filledCircleColor(sdlRenderer, squad[i].x[j], squad[i].y[j], 8, 0xff000000);
+                        filledCircleColor(sdlRenderer, squad[i].x[j], squad[i].y[j], 6,
+                                          squad[i].color);
+                    }
+                }
+            }
+        }
+
         soldiers_to_string(region, region_size);
         print_soldiers(region, region_size, sdlRenderer);
-        render_bulllets(squad,bullet_map,sdlRenderer);
         SDL_RenderPresent(sdlRenderer);
 
         SDL_Delay(1000 / FPS);
