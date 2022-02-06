@@ -18,7 +18,7 @@
 #define bases 20
 #define screenW 1200 //120
 #define screenH 720 //72
-#define chanta_harif 5
+#define chanta_harif 7
 #define color_size 10
 #define map_y 74
 #define map_x 122
