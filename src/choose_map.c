@@ -7,10 +7,12 @@ int choose_map(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],in
     int state=0;
     int is_in=0,is_in1=0,is_in2=0,is_in3=0;
     int is_in4=0;
+    int is_in5=0;
 
     SDL_Rect rect1={100,100,400,100};
     SDL_Rect rect2={100,300,100,100};
     SDL_Rect leak_rect={150,250,200,70};
+    SDL_Rect save_rect={150,350,200,70};
     SDL_Rect back_rect={500,550,200,100};
     SDL_Rect rect[6];
     for(int i=0;i<6;i++){
@@ -26,6 +28,10 @@ int choose_map(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],in
     SDL_Color text_color = {0x1E, 0x00, 0x1E, 0xff};
     Uint32 color=0xff0000ff;
     SDL_Color color1={0xff,0,0,255};
+
+    SDL_Surface *save_surface= TTF_RenderText_Solid(font,"saved map",text_color);
+    SDL_Texture *save_texture= SDL_CreateTextureFromSurface(sdlRenderer,save_surface);
+
     SDL_Surface *back_surface= TTF_RenderText_Solid(font,"Back",text_color);
     SDL_Texture *back_texture= SDL_CreateTextureFromSurface(sdlRenderer,back_surface);
 
@@ -52,7 +58,7 @@ int choose_map(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],in
     SDL_RenderCopy(sdlRenderer,map3_Texture,NULL,&rect[2]);
     SDL_RenderCopy(sdlRenderer,back_texture,NULL,&back_rect);
     SDL_RenderCopy(sdlRenderer,leak_texture,NULL,&leak_rect);
-
+    SDL_RenderCopy(sdlRenderer,save_texture,NULL,&save_rect);
     SDL_RenderPresent(sdlRenderer);
     SDL_bool done=SDL_FALSE;
     while(!done){
@@ -78,6 +84,9 @@ int choose_map(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],in
                 } else if(is_in4==1){
                     state=140;
                     done=SDL_TRUE;
+                } else if(is_in5==1){
+                    state=170;
+                    done=SDL_TRUE;
                 }
             }else if(e.type == SDL_MOUSEMOTION){
                 int x=e.motion.x;
@@ -97,6 +106,7 @@ int choose_map(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],in
                     SDL_RenderCopy(sdlRenderer,map3_Texture,NULL,&rect[2]);
                     SDL_RenderCopy(sdlRenderer,back_texture,NULL,&back_rect);
                     SDL_RenderCopy(sdlRenderer,leak_texture,NULL,&leak_rect);
+                    SDL_RenderCopy(sdlRenderer,save_texture,NULL,&save_rect);
                     SDL_RenderPresent(sdlRenderer);
 
                 } else if(is_in==1 && !(x>600 && x<630 && y>105 && y<205)){
@@ -110,6 +120,7 @@ int choose_map(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],in
                     SDL_RenderCopy(sdlRenderer,map3_Texture,NULL,&rect[2]);
                     SDL_RenderCopy(sdlRenderer,back_texture,NULL,&back_rect);
                     SDL_RenderCopy(sdlRenderer,leak_texture,NULL,&leak_rect);
+                    SDL_RenderCopy(sdlRenderer,save_texture,NULL,&save_rect);
                     SDL_RenderPresent(sdlRenderer);
                 }else if(x>750 && x<780 && y>105 && y<205){
                     is_in1=1;
@@ -126,6 +137,7 @@ int choose_map(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],in
                     SDL_RenderCopy(sdlRenderer,map3_Texture,NULL,&rect[2]);
                     SDL_RenderCopy(sdlRenderer,back_texture,NULL,&back_rect);
                     SDL_RenderCopy(sdlRenderer,leak_texture,NULL,&leak_rect);
+                    SDL_RenderCopy(sdlRenderer,save_texture,NULL,&save_rect);
                     SDL_RenderPresent(sdlRenderer);
                 } else if(is_in1==1 && !(x>750 && x<780 && y>105 && y<205)){
                     is_in1=0;
@@ -138,6 +150,7 @@ int choose_map(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],in
                     SDL_RenderCopy(sdlRenderer,map3_Texture,NULL,&rect[2]);
                     SDL_RenderCopy(sdlRenderer,back_texture,NULL,&back_rect);
                     SDL_RenderCopy(sdlRenderer,leak_texture,NULL,&leak_rect);
+                    SDL_RenderCopy(sdlRenderer,save_texture,NULL,&save_rect);
                     SDL_RenderPresent(sdlRenderer);
                 }else if(x>900 && x<930 && y>105 && y<205){
                     is_in2=1;
@@ -154,6 +167,7 @@ int choose_map(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],in
                     SDL_RenderCopy(sdlRenderer,map3_Texture,NULL,&rect[2]);
                     SDL_RenderCopy(sdlRenderer,back_texture,NULL,&back_rect);
                     SDL_RenderCopy(sdlRenderer,leak_texture,NULL,&leak_rect);
+                    SDL_RenderCopy(sdlRenderer,save_texture,NULL,&save_rect);
                     SDL_RenderPresent(sdlRenderer);
                 } else if(is_in2==1 && !(x>900 && x<930 && y>105 && y<205)){
                     is_in2=0;
@@ -166,6 +180,7 @@ int choose_map(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],in
                     SDL_RenderCopy(sdlRenderer,map3_Texture,NULL,&rect[2]);
                     SDL_RenderCopy(sdlRenderer,back_texture,NULL,&back_rect);
                     SDL_RenderCopy(sdlRenderer,leak_texture,NULL,&leak_rect);
+                    SDL_RenderCopy(sdlRenderer,save_texture,NULL,&save_rect);
                     SDL_RenderPresent(sdlRenderer);
                 } else if(x>500 && x<700 && y>550 && y<650){
                     is_in3=1;
@@ -180,6 +195,7 @@ int choose_map(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],in
                     SDL_Texture *back_texture= SDL_CreateTextureFromSurface(sdlRenderer,back_surface);
                     SDL_RenderCopy(sdlRenderer,back_texture,NULL,&back_rect);
                     SDL_RenderCopy(sdlRenderer,leak_texture,NULL,&leak_rect);
+                    SDL_RenderCopy(sdlRenderer,save_texture,NULL,&save_rect);
                     SDL_RenderPresent(sdlRenderer);
                 } else if(is_in3==1 && !(x>500 && x<700 && y>550 && y<650)){
                     is_in3=0;
@@ -194,6 +210,7 @@ int choose_map(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],in
                     SDL_Texture *back_texture= SDL_CreateTextureFromSurface(sdlRenderer,back_surface);
                     SDL_RenderCopy(sdlRenderer,back_texture,NULL,&back_rect);
                     SDL_RenderCopy(sdlRenderer,leak_texture,NULL,&leak_rect);
+                    SDL_RenderCopy(sdlRenderer,save_texture,NULL,&save_rect);
                     SDL_RenderPresent(sdlRenderer);
                 } else if(x>150 && x<350 && y>250 && y<320){
                     is_in4=1;
@@ -210,6 +227,7 @@ int choose_map(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],in
                     SDL_RenderCopy(sdlRenderer,map3_Texture,NULL,&rect[2]);
                     SDL_RenderCopy(sdlRenderer,back_texture,NULL,&back_rect);
                     SDL_RenderCopy(sdlRenderer,leak_texture,NULL,&leak_rect);
+                    SDL_RenderCopy(sdlRenderer,save_texture,NULL,&save_rect);
                     SDL_RenderPresent(sdlRenderer);
                 } else if(is_in4==1 && !(x>150 && x<350 && y>250 && y<320)){
                     is_in4=0;
@@ -222,6 +240,41 @@ int choose_map(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],in
                     SDL_RenderCopy(sdlRenderer,map3_Texture,NULL,&rect[2]);
                     SDL_RenderCopy(sdlRenderer,back_texture,NULL,&back_rect);
                     SDL_RenderCopy(sdlRenderer,leak_texture,NULL,&leak_rect);
+                    SDL_RenderCopy(sdlRenderer,save_texture,NULL,&save_rect);
+                    SDL_RenderPresent(sdlRenderer);
+                } else if(x>150 && x<350 && y>350 && y<420){
+                    is_in5=1;
+                    SDL_SetRenderDrawColor(sdlRenderer, 0xcc, 0x11, 0x11, 0x00);
+                    SDL_RenderClear(sdlRenderer);
+                    draw_menu(colors_array, sdlRenderer, 1, menu_map);
+                    filledEllipseRGBA(sdlRenderer,250,385,130,40,255,0,0,255);
+                    ellipseRGBA(sdlRenderer,250,385,130,40,31,00,31,255);
+                    ellipseRGBA(sdlRenderer,250,385,129,39,31,00,31,255);
+                    ellipseRGBA(sdlRenderer,250,385,128,38,31,00,31,255);
+                    SDL_RenderCopy(sdlRenderer,original_Texture,NULL,&rect1);
+                    SDL_RenderCopy(sdlRenderer,map1_Texture,NULL,&rect[0]);
+                    SDL_RenderCopy(sdlRenderer,map2_Texture,NULL,&rect[1]);
+                    SDL_RenderCopy(sdlRenderer,map3_Texture,NULL,&rect[2]);
+                    SDL_RenderCopy(sdlRenderer,back_texture,NULL,&back_rect);
+                    SDL_RenderCopy(sdlRenderer,leak_texture,NULL,&leak_rect);
+                    SDL_RenderCopy(sdlRenderer,save_texture,NULL,&save_rect);
+                    SDL_RenderPresent(sdlRenderer);
+                } else if(is_in4==1 && !(x>150 && x<350 && y>350 && y<420)){
+                    is_in5=0;
+                    SDL_SetRenderDrawColor(sdlRenderer, 0xcc, 0x11, 0x11, 0x00);
+                    SDL_RenderClear(sdlRenderer);
+                    draw_menu(colors_array, sdlRenderer, 1, menu_map);
+                    filledEllipseRGBA(sdlRenderer,250,385,130,40,255,0,0,255);
+                    ellipseRGBA(sdlRenderer,250,385,130,40,31,00,31,255);
+                    ellipseRGBA(sdlRenderer,250,385,129,39,31,00,31,255);
+                    ellipseRGBA(sdlRenderer,250,385,128,38,31,00,31,255);
+                    SDL_RenderCopy(sdlRenderer,original_Texture,NULL,&rect1);
+                    SDL_RenderCopy(sdlRenderer,map1_Texture,NULL,&rect[0]);
+                    SDL_RenderCopy(sdlRenderer,map2_Texture,NULL,&rect[1]);
+                    SDL_RenderCopy(sdlRenderer,map3_Texture,NULL,&rect[2]);
+                    SDL_RenderCopy(sdlRenderer,back_texture,NULL,&back_rect);
+                    SDL_RenderCopy(sdlRenderer,leak_texture,NULL,&leak_rect);
+                    SDL_RenderCopy(sdlRenderer,save_texture,NULL,&save_rect);
                     SDL_RenderPresent(sdlRenderer);
                 }
             }

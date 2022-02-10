@@ -369,8 +369,7 @@ void increase_troops(struct Regions region[],int region_size,struct Players play
 }
 
     void include_map(struct Regions region[], int game_map[][map_x], int region_size, SDL_Renderer *sdlRenderer,
-                     struct Players player[], int players) {
-
+                     struct Players player[], int players,int a[][5],int b[][map_y][map_x],int c[][map_x]) {
         SDL_SetRenderDrawColor(sdlRenderer, 0x1E, 0x00, 0x1E, 0xf0);//0xf01e001e
         SDL_RenderClear(sdlRenderer);
         set_mapsAndId(region, game_map, region_size);
@@ -382,7 +381,23 @@ void increase_troops(struct Regions region[],int region_size,struct Players play
         get_centre(region, region_size);
         give_regions_equivalently(region, region_size, game_map, players);
 
-        /*FILE *fptr= fopen("map1.txt","w");
+        for(int i=0;i<region_size;i++) {
+            for (int j = 0; j < map_y; j++) {
+                for (int k = 0; k < map_x; k++) {
+                    b[i][j][k]=region[i].map[j][k];
+                    if(i==0){
+                        c[j][k]=game_map[j][k];
+                    }
+                }
+            }
+            a[i][0]=region[i].id;
+            a[i][1]=region[i].center_y;
+            a[i][2]=region[i].center_x;
+            a[i][3]=region[i].num_of_boxes;
+            a[i][4]=region[i].is_attacking;
+        }
+        /*
+        FILE *fptr= fopen("map1.txt","w");
         fprintf(fptr,"%d\n",region_size);
         fprintf(fptr,"%d\n",players);
         for(int i=0;i<region_size;i++){
@@ -878,7 +893,7 @@ int map(SDL_Renderer *sdlRenderer, int game_map[][map_x], int region_size, int p
     Uint32 potion_colors[4]={0x77349f99,0x77f9e450,0x77a91912,0x77340087};
     Uint32 potion_border_colors[4]={0xff349f99,0xfff9e450,0xffa91912,0xff340087};
     Uint32 potion_base_color[4]={0xdd349f99,0xddf9e450,0xdda91912,0xdd340087};
-
+    int a[20][5],b[20][map_y][map_x],c[map_y][map_x];
     struct Troops squad[64];
     struct Players player[7];
     struct Regions region[20];
@@ -893,7 +908,7 @@ int map(SDL_Renderer *sdlRenderer, int game_map[][map_x], int region_size, int p
     if(*myscore==99) {
         /*players=5;
         region_size=20;*/
-        include_map(region, game_map, region_size, sdlRenderer, player, players);
+        include_map(region, game_map, region_size, sdlRenderer, player, players,a,b,c);
     } else if(*myscore==110) {
         int a;
         FILE *fptr = fopen("map1.txt", "r");
@@ -988,9 +1003,40 @@ int map(SDL_Renderer *sdlRenderer, int game_map[][map_x], int region_size, int p
         players=2;
         region_size=12;
         m=1;
-        include_map(region, game_map, region_size, sdlRenderer, player, players);
+        int a[region_size][5],b[region_size][map_y][map_x],c[map_y][map_x];
+        include_map(region, game_map, region_size, sdlRenderer, player, players,a,b,c);
         set_leak_map(region,player,region_size,players);
         draw_map(region, sdlRenderer, region_size, colors_array, players, barracks_colors_array, 2, player, game_map);
+    } else if(*myscore==170) {
+        int a;
+        FILE *fptr = fopen("map4.txt", "r");
+        fscanf(fptr, "%d", &a);
+        region_size = a;
+        fscanf(fptr, "%d", &a);
+        players = a;
+        for (int i = 0; i < region_size; i++) {
+            for (int j = 0; j < map_y; j++) {
+                for (int k = 0; k < map_x; k++) {
+                    fscanf(fptr, "%d", &a);
+                    region[i].map[j][k] = a;
+                    if (i == 0) {
+                        fscanf(fptr, "%d", &a);
+                        game_map[j][k] = a;
+                    }
+                }
+            }
+            fscanf(fptr, "%d", &a);
+            region[i].id = a;
+            fscanf(fptr, "%d", &a);
+            region[i].center_y = a;
+            fscanf(fptr, "%d", &a);
+            region[i].center_x = a;
+            fscanf(fptr, "%d", &a);
+            region[i].num_of_boxes = a;
+            fscanf(fptr, "%d", &a);
+            region[i].is_attacking = a;
+        }
+        fclose(fptr);
     }
     for(int i=0;i<players;i++){
         player[i].potion_effect=0;
@@ -1047,8 +1093,11 @@ int map(SDL_Renderer *sdlRenderer, int game_map[][map_x], int region_size, int p
                 SDL_Color loosing_color = {185,48,48,255};
                 *myscore=score(state,time_0);
                 int is_in=0;
+                int is_in1=0;
+                int key=0;
                 SDL_Rect state_rect={400,150,400,150};
                 SDL_Rect score_rect={370,320,460,150};
+                SDL_Rect save_rect={900,600,250,70};
 
                 score_to_string(*myscore,score_string);
                 char mystring[16]="your score: ";
@@ -1063,6 +1112,9 @@ int map(SDL_Renderer *sdlRenderer, int game_map[][map_x], int region_size, int p
                     mystring[13] = '\0';
                     *myscore=0;
                 }
+                SDL_Surface *save_surface= TTF_RenderText_Solid(font,"save map",Winning_color);
+                SDL_Texture *save_texture= SDL_CreateTextureFromSurface(sdlRenderer,save_surface);
+
                 SDL_Surface *score_surface= TTF_RenderText_Solid(font,mystring,Winning_color);
                 SDL_Texture *score_Texture = SDL_CreateTextureFromSurface(sdlRenderer,score_surface);
                 SDL_Surface *score_surface1= TTF_RenderText_Solid(font,mystring,loosing_color);
@@ -1100,7 +1152,7 @@ int map(SDL_Renderer *sdlRenderer, int game_map[][map_x], int region_size, int p
                     SDL_RenderCopy(sdlRenderer,score_Texture1,NULL,&score_rect);
                 }
 
-
+                SDL_RenderCopy(sdlRenderer,save_texture,NULL,&save_rect);
                 SDL_RenderPresent(sdlRenderer);
                 SDL_bool done=SDL_FALSE;
                 while(done == SDL_FALSE){
@@ -1138,7 +1190,7 @@ int map(SDL_Renderer *sdlRenderer, int game_map[][map_x], int region_size, int p
                                      SDL_RenderCopy(sdlRenderer,continue_Texture1,NULL,&continue_rect);
                                      SDL_RenderCopy(sdlRenderer,score_Texture1,NULL,&score_rect);
                                  }
-
+                                 SDL_RenderCopy(sdlRenderer,save_texture,NULL,&save_rect);
                                  SDL_RenderPresent(sdlRenderer);
 
                                  //render
@@ -1167,14 +1219,83 @@ int map(SDL_Renderer *sdlRenderer, int game_map[][map_x], int region_size, int p
                                      SDL_RenderCopy(sdlRenderer,continue_Texture1,NULL,&continue_rect);
                                      SDL_RenderCopy(sdlRenderer,score_Texture1,NULL,&score_rect);
                                  }
-
+                                 SDL_RenderCopy(sdlRenderer,save_texture,NULL,&save_rect);
                                  SDL_RenderPresent(sdlRenderer);
 
                                  //render
+                             } else if(x>900 && x<1150 && y>600 && y<670){
+                                 is_in1=1;//900 600 250 70
+                                 save_rect.x=880;
+                                 save_rect.w=290;
+                                 save_rect.y=590;
+                                 save_rect.h=90;
+                                 SDL_SetRenderDrawColor(sdlRenderer, 0x1E, 0x00, 0x1E, 0xf0);//0xf01e001e
+                                 SDL_RenderClear(sdlRenderer);
+                                 draw_map(region, sdlRenderer, region_size, colors_array, players, barracks_colors_array, 0, player, game_map);
+                                 draw_bases(region, region_size, game_map, sdlRenderer);
+                                 draw_potions(potion,sdlRenderer);
+                                 print_soldiers(region, region_size, sdlRenderer);
+                                 //SDL_RenderPresent(sdlRenderer);
+
+                                 boxColor(sdlRenderer,0,0,1200,720,0x99666666);
+                                 if(state==1) {
+                                     SDL_RenderCopy(sdlRenderer, state_Texture, NULL, &state_rect);
+                                     SDL_RenderCopy(sdlRenderer,continue_Texture,NULL,&continue_rect);
+                                     SDL_RenderCopy(sdlRenderer,score_Texture,NULL,&score_rect);
+                                 }else{
+                                     SDL_RenderCopy(sdlRenderer, state_Texture1, NULL, &state_rect);
+                                     SDL_RenderCopy(sdlRenderer,continue_Texture1,NULL,&continue_rect);
+                                     SDL_RenderCopy(sdlRenderer,score_Texture1,NULL,&score_rect);
+                                 }
+                                 SDL_RenderCopy(sdlRenderer,save_texture,NULL,&save_rect);
+                                 SDL_RenderPresent(sdlRenderer);
+                             } else if(is_in1==1 && !(x>900 && x<1150 && y>600 && y<670)){
+                                 is_in1=0;
+                                 save_rect.x=900;
+                                 save_rect.w=250;
+                                 save_rect.y=600;
+                                 save_rect.h=70;
+                                 SDL_SetRenderDrawColor(sdlRenderer, 0x1E, 0x00, 0x1E, 0xf0);//0xf01e001e
+                                 SDL_RenderClear(sdlRenderer);
+                                 draw_map(region, sdlRenderer, region_size, colors_array, players, barracks_colors_array, 0, player, game_map);
+                                 draw_bases(region, region_size, game_map, sdlRenderer);
+                                 draw_potions(potion,sdlRenderer);
+                                 print_soldiers(region, region_size, sdlRenderer);
+                                 //SDL_RenderPresent(sdlRenderer);
+
+                                 boxColor(sdlRenderer,0,0,1200,720,0x99666666);
+                                 if(state==1) {
+                                     SDL_RenderCopy(sdlRenderer, state_Texture, NULL, &state_rect);
+                                     SDL_RenderCopy(sdlRenderer,continue_Texture,NULL,&continue_rect);
+                                     SDL_RenderCopy(sdlRenderer,score_Texture,NULL,&score_rect);
+                                 }else{
+                                     SDL_RenderCopy(sdlRenderer, state_Texture1, NULL, &state_rect);
+                                     SDL_RenderCopy(sdlRenderer,continue_Texture1,NULL,&continue_rect);
+                                     SDL_RenderCopy(sdlRenderer,score_Texture1,NULL,&score_rect);
+                                 }
+                                 SDL_RenderCopy(sdlRenderer,save_texture,NULL,&save_rect);
+                                 SDL_RenderPresent(sdlRenderer);
                              }
                          } else if(e.type==SDL_MOUSEBUTTONDOWN && e.button.button==SDL_BUTTON_LEFT){
                              if(is_in==1){
                                  break;
+                             } else if(is_in1==1 && key==0){
+                                 key=1;
+                                 FILE *fptr= fopen("map4.txt","w");
+                                 fprintf(fptr,"%d\n",region_size);
+                                 fprintf(fptr,"%d\n",players);
+                                 for(int i=0;i<region_size;i++){
+                                     for(int j=0;j<map_y;j++){
+                                         for(int k=0;k<map_x;k++){
+                                             fprintf(fptr," %d ",b[i][j][k]);
+                                             if(i==0) {
+                                                 fprintf(fptr, " %d ", c[j][k]);
+                                             }
+                                         }
+                                     }
+                                     fprintf(fptr," %d %d %d %d %d\n",a[i][0],a[i][1],a[i][2],a[i][3],a[i][4]);
+                                 }
+                                 fclose(fptr);
                              }
                          }
                     }
@@ -1191,6 +1312,8 @@ int map(SDL_Renderer *sdlRenderer, int game_map[][map_x], int region_size, int p
                 SDL_FreeSurface(score_surface1);
                 SDL_FreeSurface(continue_surface);
                 SDL_FreeSurface(continue_surface1);
+                SDL_DestroyTexture(save_texture);
+                SDL_FreeSurface(save_surface);
                 break;
             }
             counter = 0;

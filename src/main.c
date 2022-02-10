@@ -131,7 +131,7 @@ int main()
         } else if(menu_option==0 || menu_option==1 || menu_option==101){
             menu_option=main_menu(menu_map,sdlRenderer,font,font2,colors_array);
             myscore=menu_option;
-        } else if(menu_option==110 || menu_option==120 || menu_option==130 || menu_option==140 || menu_option==99){
+        } else if(menu_option==110 || menu_option==120 || menu_option==130 || menu_option==140 || menu_option==99 || menu_option==170){
             menu_option=map(sdlRenderer,game_map,region_size,players,colors_array,barracks_colors_array,sdlWindow,font,&myscore);
             tmp_score=myscore;
             add_to_leaderboard(tmp_score,users,scores,user_name);
