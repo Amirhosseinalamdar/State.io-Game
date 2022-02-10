@@ -147,6 +147,8 @@ int main()
     }
     SDL_DestroyWindow(sdlWindow);
     SDL_DestroyRenderer(sdlRenderer);
+    TTF_CloseFont(font);
+    TTF_CloseFont(font2);
 TTF_Quit();
 SDL_Quit();
 }
