@@ -55,8 +55,9 @@ int main_menu(int menu_map[][map_x-1],SDL_Renderer *sdlRenderer,TTF_Font *font,T
     SDL_Surface *surface = TTF_RenderText_Solid(font2, "State.io", text_color);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(sdlRenderer, surface);
 
+    SDL_SetRenderDrawColor(sdlRenderer, 0xcc, 0x11, 0x11, 0x00);
     SDL_RenderClear(sdlRenderer);
-    draw_menu(colors_array, sdlRenderer, 1, menu_map);
+    draw_menu(colors_array, sdlRenderer, 0, menu_map);
     SDL_RenderCopy(sdlRenderer, texture, NULL, &text_rect);
     SDL_DestroyTexture(texture);
     SDL_FreeSurface(surface);
@@ -92,13 +93,14 @@ int main_menu(int menu_map[][map_x-1],SDL_Renderer *sdlRenderer,TTF_Font *font,T
     int x, y;
     while (shallExit == SDL_FALSE) {
 
-        SDL_Delay(1000/60);
+        //SDL_Delay(1000/60);
         //SDL_Delay(1000 / FPS);
         SDL_Event sdlEvent;
         while (SDL_PollEvent(&sdlEvent)) {
             switch (sdlEvent.type) {
                 case SDL_QUIT:
                     shallExit = SDL_TRUE;
+                    menu_option=-100;
                     break;
                 case SDL_MOUSEMOTION:
                     x = sdlEvent.motion.x;
@@ -112,13 +114,13 @@ int main_menu(int menu_map[][map_x-1],SDL_Renderer *sdlRenderer,TTF_Font *font,T
                     y = sdlEvent.motion.y;
                     if (x > 150 && x < 550 && y > 180 && y < 330) {
                         shallExit = SDL_TRUE;
-                        menu_option = 1;
+                        menu_option = 100;
                     } else if (x > 650 && x < 1050 && y > 180 && y < 330) {
                         shallExit = SDL_TRUE;
-                        menu_option = 2;
+                        menu_option = 20;
                     } else if (x > 450 && x < 750 && y > 500 && y < 600) {
                         shallExit = SDL_TRUE;
-                        menu_option = 3;
+                        menu_option = 30;
                     }
                     break;
             }

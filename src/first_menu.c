@@ -61,7 +61,7 @@ void draw_menu(Uint32 colors_array[],SDL_Renderer *sdlRenderer,int flag,int menu
     }
 }
 
-int first_menu(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],int menu_map[][map_x-1]) {
+int first_menu(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],int menu_map[][map_x-1],char user_name[]) {
     SDL_Color main_title_color = {0x1E, 0x00, 0x1E, 0xff};
 //entering_user_name
     SDL_Rect user_name_background_rect = {350, 400, 500, 100};
@@ -73,10 +73,9 @@ int first_menu(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],in
     SDL_Texture *button_texture = SDL_CreateTextureFromSurface(sdlRenderer, button_surface);
 
 
-    int menu_option = 1;
+    int menu_option = 0;
     SDL_bool shallExit;
 //0xff5635B0
-    char user_name[32];
     for (int i = 0; i < 32; i++) { user_name[i] = '\0'; }
     char input = '\0';
 
@@ -85,9 +84,9 @@ int first_menu(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],in
     SDL_Texture *user_name_texture = SDL_CreateTextureFromSurface(sdlRenderer, user_name_surface);
     SDL_FreeSurface(user_name_surface);
     SDL_DestroyTexture(user_name_texture);
-    SDL_SetRenderDrawColor(sdlRenderer, 0xff, 0x00, 0x00, 0x00);
+    //SDL_SetRenderDrawColor(sdlRenderer, 0xff, 0x00, 0x00, 0x00);
     SDL_RenderClear(sdlRenderer);
-    draw_menu(colors_array, sdlRenderer, 0, menu_map);
+    draw_menu(colors_array, sdlRenderer, 1, menu_map);
     include_welcome_enter(font, sdlRenderer);
 
     SDL_SetRenderDrawColor(sdlRenderer, 0x1e, 0x00, 0x1e, 255);
@@ -110,7 +109,7 @@ int first_menu(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],in
             //switch (event.type) {
                 if(event.type==SDL_QUIT) {
                     done = SDL_TRUE;
-                    menu_option = 0;
+                    menu_option = -100;
                 }
                 else if(event.type==SDL_KEYDOWN) {
                     input = event.key.keysym.sym;
@@ -154,7 +153,7 @@ int first_menu(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],in
                     } else {
                         SDL_SetRenderDrawColor(sdlRenderer, 0xff, 0x00, 0x00, 0x00);
                         SDL_RenderClear(sdlRenderer);
-                        draw_menu(colors_array, sdlRenderer, 0, menu_map);
+                        draw_menu(colors_array, sdlRenderer, 1, menu_map);
                         include_welcome_enter(font, sdlRenderer);
 
                         SDL_SetRenderDrawColor(sdlRenderer, 0x1e, 0x00, 0x1e, 255);
@@ -200,7 +199,7 @@ int first_menu(TTF_Font *font,SDL_Renderer *sdlRenderer,Uint32 colors_array[],in
 //-------------------
                         SDL_SetRenderDrawColor(sdlRenderer, 0xff, 0x00, 0x00, 0x00);
                         SDL_RenderClear(sdlRenderer);
-                        draw_menu(colors_array, sdlRenderer, 0, menu_map);
+                        draw_menu(colors_array, sdlRenderer, 1, menu_map);
                         include_welcome_enter(font, sdlRenderer);
 
                         SDL_SetRenderDrawColor(sdlRenderer, 0x1e, 0x00, 0x1e, 255);

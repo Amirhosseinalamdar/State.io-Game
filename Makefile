@@ -123,6 +123,60 @@ state/fast:
 	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/build
 .PHONY : state/fast
 
+src/choose_map.o: src/choose_map.c.o
+
+.PHONY : src/choose_map.o
+
+# target to build an object file
+src/choose_map.c.o:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/choose_map.c.o
+.PHONY : src/choose_map.c.o
+
+src/choose_map.i: src/choose_map.c.i
+
+.PHONY : src/choose_map.i
+
+# target to preprocess a source file
+src/choose_map.c.i:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/choose_map.c.i
+.PHONY : src/choose_map.c.i
+
+src/choose_map.s: src/choose_map.c.s
+
+.PHONY : src/choose_map.s
+
+# target to generate assembly for a file
+src/choose_map.c.s:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/choose_map.c.s
+.PHONY : src/choose_map.c.s
+
+src/choose_num.o: src/choose_num.c.o
+
+.PHONY : src/choose_num.o
+
+# target to build an object file
+src/choose_num.c.o:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/choose_num.c.o
+.PHONY : src/choose_num.c.o
+
+src/choose_num.i: src/choose_num.c.i
+
+.PHONY : src/choose_num.i
+
+# target to preprocess a source file
+src/choose_num.c.i:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/choose_num.c.i
+.PHONY : src/choose_num.c.i
+
+src/choose_num.s: src/choose_num.c.s
+
+.PHONY : src/choose_num.s
+
+# target to generate assembly for a file
+src/choose_num.c.s:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/choose_num.c.s
+.PHONY : src/choose_num.c.s
+
 src/first_menu.o: src/first_menu.c.o
 
 .PHONY : src/first_menu.o
@@ -231,6 +285,33 @@ src/map.c.s:
 	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/map.c.s
 .PHONY : src/map.c.s
 
+src/ranks.o: src/ranks.c.o
+
+.PHONY : src/ranks.o
+
+# target to build an object file
+src/ranks.c.o:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/ranks.c.o
+.PHONY : src/ranks.c.o
+
+src/ranks.i: src/ranks.c.i
+
+.PHONY : src/ranks.i
+
+# target to preprocess a source file
+src/ranks.c.i:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/ranks.c.i
+.PHONY : src/ranks.c.i
+
+src/ranks.s: src/ranks.c.s
+
+.PHONY : src/ranks.s
+
+# target to generate assembly for a file
+src/ranks.c.s:
+	$(MAKE) -f CMakeFiles/state.dir/build.make CMakeFiles/state.dir/src/ranks.c.s
+.PHONY : src/ranks.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -240,6 +321,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... state"
+	@echo "... src/choose_map.o"
+	@echo "... src/choose_map.i"
+	@echo "... src/choose_map.s"
+	@echo "... src/choose_num.o"
+	@echo "... src/choose_num.i"
+	@echo "... src/choose_num.s"
 	@echo "... src/first_menu.o"
 	@echo "... src/first_menu.i"
 	@echo "... src/first_menu.s"
@@ -252,6 +339,9 @@ help:
 	@echo "... src/map.o"
 	@echo "... src/map.i"
 	@echo "... src/map.s"
+	@echo "... src/ranks.o"
+	@echo "... src/ranks.i"
+	@echo "... src/ranks.s"
 .PHONY : help
 
 

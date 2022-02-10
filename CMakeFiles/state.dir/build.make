@@ -57,9 +57,35 @@ include CMakeFiles/state.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/state.dir/flags.make
 
+CMakeFiles/state.dir/src/choose_map.c.o: CMakeFiles/state.dir/flags.make
+CMakeFiles/state.dir/src/choose_map.c.o: src/choose_map.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/amirhossein/Desktop/state.io/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/state.dir/src/choose_map.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/state.dir/src/choose_map.c.o   -c /home/amirhossein/Desktop/state.io/src/choose_map.c
+
+CMakeFiles/state.dir/src/choose_map.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/state.dir/src/choose_map.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/amirhossein/Desktop/state.io/src/choose_map.c > CMakeFiles/state.dir/src/choose_map.c.i
+
+CMakeFiles/state.dir/src/choose_map.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/state.dir/src/choose_map.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/amirhossein/Desktop/state.io/src/choose_map.c -o CMakeFiles/state.dir/src/choose_map.c.s
+
+CMakeFiles/state.dir/src/choose_num.c.o: CMakeFiles/state.dir/flags.make
+CMakeFiles/state.dir/src/choose_num.c.o: src/choose_num.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/amirhossein/Desktop/state.io/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/state.dir/src/choose_num.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/state.dir/src/choose_num.c.o   -c /home/amirhossein/Desktop/state.io/src/choose_num.c
+
+CMakeFiles/state.dir/src/choose_num.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/state.dir/src/choose_num.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/amirhossein/Desktop/state.io/src/choose_num.c > CMakeFiles/state.dir/src/choose_num.c.i
+
+CMakeFiles/state.dir/src/choose_num.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/state.dir/src/choose_num.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/amirhossein/Desktop/state.io/src/choose_num.c -o CMakeFiles/state.dir/src/choose_num.c.s
+
 CMakeFiles/state.dir/src/first_menu.c.o: CMakeFiles/state.dir/flags.make
 CMakeFiles/state.dir/src/first_menu.c.o: src/first_menu.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/amirhossein/Desktop/state.io/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/state.dir/src/first_menu.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/amirhossein/Desktop/state.io/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/state.dir/src/first_menu.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/state.dir/src/first_menu.c.o   -c /home/amirhossein/Desktop/state.io/src/first_menu.c
 
 CMakeFiles/state.dir/src/first_menu.c.i: cmake_force
@@ -72,7 +98,7 @@ CMakeFiles/state.dir/src/first_menu.c.s: cmake_force
 
 CMakeFiles/state.dir/src/main.c.o: CMakeFiles/state.dir/flags.make
 CMakeFiles/state.dir/src/main.c.o: src/main.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/amirhossein/Desktop/state.io/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/state.dir/src/main.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/amirhossein/Desktop/state.io/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/state.dir/src/main.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/state.dir/src/main.c.o   -c /home/amirhossein/Desktop/state.io/src/main.c
 
 CMakeFiles/state.dir/src/main.c.i: cmake_force
@@ -85,7 +111,7 @@ CMakeFiles/state.dir/src/main.c.s: cmake_force
 
 CMakeFiles/state.dir/src/main_menu.c.o: CMakeFiles/state.dir/flags.make
 CMakeFiles/state.dir/src/main_menu.c.o: src/main_menu.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/amirhossein/Desktop/state.io/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/state.dir/src/main_menu.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/amirhossein/Desktop/state.io/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/state.dir/src/main_menu.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/state.dir/src/main_menu.c.o   -c /home/amirhossein/Desktop/state.io/src/main_menu.c
 
 CMakeFiles/state.dir/src/main_menu.c.i: cmake_force
@@ -98,7 +124,7 @@ CMakeFiles/state.dir/src/main_menu.c.s: cmake_force
 
 CMakeFiles/state.dir/src/map.c.o: CMakeFiles/state.dir/flags.make
 CMakeFiles/state.dir/src/map.c.o: src/map.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/amirhossein/Desktop/state.io/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/state.dir/src/map.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/amirhossein/Desktop/state.io/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object CMakeFiles/state.dir/src/map.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/state.dir/src/map.c.o   -c /home/amirhossein/Desktop/state.io/src/map.c
 
 CMakeFiles/state.dir/src/map.c.i: cmake_force
@@ -109,23 +135,42 @@ CMakeFiles/state.dir/src/map.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/state.dir/src/map.c.s"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/amirhossein/Desktop/state.io/src/map.c -o CMakeFiles/state.dir/src/map.c.s
 
+CMakeFiles/state.dir/src/ranks.c.o: CMakeFiles/state.dir/flags.make
+CMakeFiles/state.dir/src/ranks.c.o: src/ranks.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/amirhossein/Desktop/state.io/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/state.dir/src/ranks.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/state.dir/src/ranks.c.o   -c /home/amirhossein/Desktop/state.io/src/ranks.c
+
+CMakeFiles/state.dir/src/ranks.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/state.dir/src/ranks.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/amirhossein/Desktop/state.io/src/ranks.c > CMakeFiles/state.dir/src/ranks.c.i
+
+CMakeFiles/state.dir/src/ranks.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/state.dir/src/ranks.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/amirhossein/Desktop/state.io/src/ranks.c -o CMakeFiles/state.dir/src/ranks.c.s
+
 # Object files for target state
 state_OBJECTS = \
+"CMakeFiles/state.dir/src/choose_map.c.o" \
+"CMakeFiles/state.dir/src/choose_num.c.o" \
 "CMakeFiles/state.dir/src/first_menu.c.o" \
 "CMakeFiles/state.dir/src/main.c.o" \
 "CMakeFiles/state.dir/src/main_menu.c.o" \
-"CMakeFiles/state.dir/src/map.c.o"
+"CMakeFiles/state.dir/src/map.c.o" \
+"CMakeFiles/state.dir/src/ranks.c.o"
 
 # External object files for target state
 state_EXTERNAL_OBJECTS =
 
+state: CMakeFiles/state.dir/src/choose_map.c.o
+state: CMakeFiles/state.dir/src/choose_num.c.o
 state: CMakeFiles/state.dir/src/first_menu.c.o
 state: CMakeFiles/state.dir/src/main.c.o
 state: CMakeFiles/state.dir/src/main_menu.c.o
 state: CMakeFiles/state.dir/src/map.c.o
+state: CMakeFiles/state.dir/src/ranks.c.o
 state: CMakeFiles/state.dir/build.make
 state: CMakeFiles/state.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/amirhossein/Desktop/state.io/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking C executable state"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/amirhossein/Desktop/state.io/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking C executable state"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/state.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
